@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Desktop Audio Chatbot</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Desktop Audio Chatbot</h1>
+          <p class="subtitle">Listen to system audio, transcribe it, and ask questions</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="status-chip" id="statusChip">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusLabel">Idle</span>
+        </div>
+        <button class="btn ghost" id="settingsBtn" type="button">Settings</button>
+      </div>
+    </header>
+
+    <section class="controls">
+      <label class="field grow">
+        <span>Audio source</span>
+        <select id="deviceSelect"></select>
+      </label>
+      <div class="meter" title="Input level">
+        <span>Level</span>
+        <div class="meter-track"><div class="meter-fill" id="levelFill"></div></div>
+      </div>
+      <button class="btn primary" id="listenBtn" type="button">Start listening</button>
+    </section>
+
+    <div class="banner hidden" id="loopbackBanner" role="status"></div>
+    <div class="banner error hidden" id="errorBanner" role="alert"></div>
+
+    <main class="panes">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Live transcript</h2>
+          <button class="btn tiny ghost" id="clearTranscriptBtn" type="button">Clear</button>
+        </div>
+        <div class="panel-body transcript" id="transcript" aria-live="polite">
+          <p class="empty" id="transcriptEmpty">Start listening to desktop audio. Speech will show up here.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Chat</h2>
+          <button class="btn tiny ghost" id="clearChatBtn" type="button">New chat</button>
+        </div>
+        <div class="suggestions" id="suggestions">
+          <button type="button" data-prompt="What did they just say?">What did they just say?</button>
+          <button type="button" data-prompt="Summarize the last 2 minutes.">Summarize last 2 minutes</button>
+          <button type="button" data-prompt="List any action items or decisions from the transcript.">Action items</button>
+        </div>
+        <div class="panel-body chat" id="chatLog"></div>
+        <form class="composer" id="chatForm">
+          <textarea id="chatInput" rows="2" placeholder="Ask about what you just heard…"></textarea>
+          <button class="btn primary" type="submit" id="sendBtn">Send</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <aside class="drawer hidden" id="settingsDrawer">
+    <div class="drawer-card">
+      <div class="panel-head">
+        <h2>Settings</h2>
+        <button class="btn tiny ghost" id="closeSettingsBtn" type="button">Close</button>
+      </div>
+      <form id="settingsForm" class="settings-form">
+        <label class="field">
+          <span>LLM base URL (OpenAI-compatible)</span>
+          <input id="llmBaseUrl" type="url" placeholder="https://api.openai.com/v1" />
+        </label>
+        <label class="field">
+          <span>LLM API key</span>
+          <input id="llmApiKey" type="password" autocomplete="off" placeholder="Leave blank to keep the saved key" />
+          <small id="apiKeyHint"></small>
+        </label>
+        <label class="field">
+          <span>LLM model</span>
+          <input id="llmModel" type="text" placeholder="gpt-4o-mini" />
+        </label>
+        <label class="field">
+          <span>Whisper model</span>
+          <select id="whisperModel">
+            <option value="tiny">tiny (fastest)</option>
+            <option value="tiny.en">tiny.en</option>
+            <option value="base" selected>base (default)</option>
+            <option value="base.en">base.en</option>
+            <option value="small">small</option>
+            <option value="small.en">small.en</option>
+            <option value="medium">medium</option>
+            <option value="large-v3">large-v3</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Whisper device</span>
+          <select id="whisperDevice">
+            <option value="auto">auto</option>
+            <option value="cpu">cpu</option>
+            <option value="cuda">cuda</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Transcript language</span>
+          <input id="whisperLanguage" type="text" placeholder="auto (empty) or en, es, fr, id…" />
+        </label>
+        <p class="hint">Keys are stored only in <code>~/.desktop-audio-chatbot/settings.json</code> (mode 600) or your local <code>.env</code>. They are never sent anywhere except the LLM base URL you configure.</p>
+        <button class="btn primary" type="submit">Save settings</button>
+      </form>
+    </div>
+  </aside>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
