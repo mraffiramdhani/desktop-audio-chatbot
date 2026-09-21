@@ -160,6 +160,8 @@ class AppEngine:
                 continue
             if not text:
                 continue
+            if sum(ch.isalpha() for ch in text) < 4:
+                continue
             duration = float(item.size) / 16000.0
             segment = self.store.add(text, duration=duration, language=language)
             self.emit({"type": "transcript", "segment": segment.as_dict()})
