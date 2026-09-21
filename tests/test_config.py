@@ -6,9 +6,7 @@ def test_public_dict_masks_key():
     public = settings.public_dict()
     assert public["llm_api_key"] == ""
     assert public["llm_api_key_set"] is True
-    assert "sk-ab" in public["llm_api_key_hint"]
-    assert "mnop" in public["llm_api_key_hint"]
-    assert "efghijkl" not in public["llm_api_key_hint"]
+    assert public["llm_api_key_hint"] == "sk-a…mnop"
 
 
 def test_empty_key_keeps_previous():

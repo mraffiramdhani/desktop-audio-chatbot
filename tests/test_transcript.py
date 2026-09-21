@@ -5,7 +5,7 @@ from desktop_audio_chatbot.transcript import TranscriptStore
 
 def test_recent_context_window():
     store = TranscriptStore(max_seconds=600)
-    now = 1_700_000_000.0
+    now = time.time()
     store.add("old line", duration=1, t_end=now - 400)
     store.add("recent line", duration=1, t_end=now - 20)
     text = store.context_text(max_seconds=120, now=now)

@@ -54,8 +54,16 @@ class Transcriber:
                 beam_size=1,
                 vad_filter=False,
                 without_timestamps=True,
+                condition_on_previous_text=False,
             )
-            parts = [seg.text.strip() for seg in segments if getattr(seg, "text", "").strip()]
+            parts = []
+            for seg in segments:
+                piece = getattr(seg, "text", "").strip()
+                if not piece:
+                    continue
+                if float(getattr(seg, "no_speech_prob", 0.0) or 0.0) > 0.65:
+                    continue
+                parts.append(piece)
             detected = getattr(info, "language", "") or ""
         text = " ".join(parts).strip()
         return text, detected
