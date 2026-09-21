@@ -235,8 +235,21 @@ $("suggestions").addEventListener("click", (ev) => {
   if (btn) sendChat(btn.dataset.prompt);
 });
 
-$("settingsBtn").addEventListener("click", () => $("settingsDrawer").classList.remove("hidden"));
-$("closeSettingsBtn").addEventListener("click", () => $("settingsDrawer").classList.add("hidden"));
+function openSettings() {
+  $("settingsDrawer").classList.remove("hidden");
+}
+function closeSettings() {
+  $("settingsDrawer").classList.add("hidden");
+}
+
+$("settingsBtn").addEventListener("click", openSettings);
+$("closeSettingsBtn").addEventListener("click", closeSettings);
+$("settingsDrawer").addEventListener("click", (ev) => {
+  if (ev.target === $("settingsDrawer")) closeSettings();
+});
+document.addEventListener("keydown", (ev) => {
+  if (ev.key === "Escape") closeSettings();
+});
 
 $("settingsForm").addEventListener("submit", async (ev) => {
   ev.preventDefault();
